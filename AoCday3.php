@@ -23,9 +23,7 @@ $diagnosticData = array_filter($diagnosticData);
 // Test case
 $diagnosticData = array('00100', '11110', '10110', '10111', '10101', '01111', '00111', '11100', '10000', '11001', '00010', '01010');
 
-$diagnosticMap = splitDiagnosticData($diagnosticData);
-
-$powerConsumption = calculatePowerConsumption($diagnosticMap);
+$powerConsumption = calculatePowerConsumption($diagnosticData);
 $lifeSupportRating = verifyLifeSupportRating($diagnosticData);
 
 print_r("Power consumption: " . $powerConsumption . "\n");
@@ -34,11 +32,12 @@ print_r("Life Support Rating: " . $lifeSupportRating . "\n");
 /**
  * PART ONE, DAY THREE
  */
-function calculatePowerConsumption($diagnosticMap) {
+function calculatePowerConsumption($diagnosticData) {
 
-    $nrOn = $nrOff = array();
-    $gammaRate = $epsilonRate = "";
-    $powerConsumption = 0;
+    $diagnosticMap = splitDiagnosticData($diagnosticData);
+
+    $nrOn = array_fill(0, sizeof($diagnosticMap[0]), 0);
+    $nrOff = array_fill(0, sizeof($diagnosticMap[0]), 0);
 
     foreach($diagnosticMap as $diagItem) {
         for($idx = 0; $idx < sizeof($diagItem); $idx++)
@@ -54,6 +53,8 @@ function calculatePowerConsumption($diagnosticMap) {
 
     ksort($nrOn);
     ksort($nrOff);
+
+    $gammaRate = $epsilonRate = "";
 
     for($idx = 0; $idx < sizeof($nrOn); $idx++) {
         if($nrOn[$idx] > $nrOff[$idx]) {
@@ -99,8 +100,7 @@ function getRating($diagnosticData, $isOxygen = true, $idx = 0)
             $nrOff++;
     }
 
-    $filterValue = (int)($nrOn >= $nrOff);
-    $filterValue = $isOxygen ? $filterValue : !$filterValue;
+    $filterValue = (int)($isOxygen ? ($nrOn >= $nrOff) : ($nrOn < $nrOff));
     
     $filteredItems = array_filter($diagnosticData, function($elem) use($idx, $filterValue){
         return substr($elem, $idx, 1) == $filterValue;
