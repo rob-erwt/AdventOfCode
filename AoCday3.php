@@ -1,17 +1,5 @@
 <?php
 
-/**
- * Spoilers
- * Spoilers
- * Spoilers
- * Spoilers
- * Spoilers
- * Spoilers
- * Spoilers
- * Spoilers
- * Spoilers
- */
-
 /* Code belonging with https://adventofcode.com/2021/day/2 */
 
 $diagnosticData = $diagnosticMap= array();
@@ -36,6 +24,7 @@ function calculatePowerConsumption($diagnosticData) {
 
     $diagnosticMap = splitDiagnosticData($diagnosticData);
 
+    // Make sure we don't get warning on non-exsiting array keys
     $nrOn = array_fill(0, sizeof($diagnosticMap[0]), 0);
     $nrOff = array_fill(0, sizeof($diagnosticMap[0]), 0);
 
@@ -51,6 +40,7 @@ function calculatePowerConsumption($diagnosticData) {
         }
     }
 
+    // Resort array so keys start at 0 again
     ksort($nrOn);
     ksort($nrOff);
 
@@ -67,6 +57,7 @@ function calculatePowerConsumption($diagnosticData) {
         }
     }
 
+    // Translate binary number to decimal and calculate Power Consumption
     return(bindec($gammaRate) * bindec($epsilonRate));
 }
 
@@ -84,6 +75,9 @@ function verifyLifeSupportRating($diagnosticData) {
     return($oxygenGeneratorRating * $co2ScrubberRating);
 }
 
+/**
+ * Calculate the Oxygen Generator Rating ($isOxygen = true) or the CO2 Scrubber Rating ($isOxygen = false)
+ */
 function getRating($diagnosticData, $isOxygen = true, $idx = 0)
 {
     if(sizeof($diagnosticData) <= 1)
@@ -100,17 +94,23 @@ function getRating($diagnosticData, $isOxygen = true, $idx = 0)
             $nrOff++;
     }
 
+    // Toggle to caculate Oxygen and take most common diagnostic value or CO2 ant take least common value
     $filterValue = (int)($isOxygen ? ($nrOn >= $nrOff) : ($nrOn < $nrOff));
     
+    // Filter diagnostic data based on correct filtervalue
     $filteredItems = array_filter($diagnosticData, function($elem) use($idx, $filterValue){
         return substr($elem, $idx, 1) == $filterValue;
     });
     
     $idx++;
 
+    // Recursive until we have one diagnostic vakue left
     return getRating($filteredItems, $idx, $isOxygen);
 }
 
+/**
+ * Helper function to split input data in more usefull format (array of lines containing an array with seperate characters)
+ */
 function splitDiagnosticData($diagnosticData)
 {
     $diagnosticMap = array();
