@@ -5,12 +5,8 @@
 // Reading input file
 $inputData = explode("\n\n", file_get_contents('inputday4.txt'));
 $randomNr = explode(",", array_shift($inputData));
-//$randomNr = array(7);
 
 $bingoCards = array();
-
-//print_r($randomNr);
-//print_r($inputData);
 
 foreach($inputData as $card)
 {
@@ -19,27 +15,24 @@ foreach($inputData as $card)
 }
 
 foreach($randomNr as $number) {
-    $fullCard = checkCards($number, $bingoCards);
 
-    if($fullCard) {
-        $value = calculateCardValue($number, $fullCard);
-        print_r("Winning value: " . $value . "\n");
-        exit;
-    }
-}
-
-print_r("No winning cards found... :(\n");
-
-function checkCards($number, &$cards) {
-
-    foreach ($cards as $card)
+    foreach($bingoCards as $card)
     {
         $card->updateCard($number);
-
-        if($card->hasBingo())
-            return $card;
     }
-    return false;
+
+    for($idx = 0; $idx < sizeof($bingoCards); $idx++) {
+    
+        $bingoCard = $bingoCards[$idx];
+        if($bingoCard->hasBingo()) {
+
+            $value = calculateCardValue($number, $bingoCard);
+            print_r("Winning value: " . $value . "\n");
+
+            unset($bingoCards[$idx]);
+            $bingoCards = array_values($bingoCards);
+        }
+    }
 }
 
 function calculateCardValue($number, BingoCard $card) {
