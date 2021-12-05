@@ -1,6 +1,6 @@
 <?php
 
-/* Code belonging with https://adventofcode.com/2021/day/2 */
+/* Code belonging with https://adventofcode.com/2021/day/3 */
 
 $diagnosticData = $diagnosticMap= array();
 
