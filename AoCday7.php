@@ -8,7 +8,6 @@ $crabs = explode(",", file_get_contents('inputday7.txt'));
 
 $distListPart1 = $distListPart2 = array();
 
-// Part 1
 foreach(range(min($crabs), max($crabs)) as $dist) {
 
     foreach($crabs as $crab) {
