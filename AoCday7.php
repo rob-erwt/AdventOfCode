@@ -23,7 +23,6 @@ foreach(range(min($crabs), max($crabs)) as $dist) {
             $fuel += $i;
         }
         $distListPart2[$dist] += $fuel;
-
     }
 }
 
