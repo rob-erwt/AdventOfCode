@@ -4,20 +4,26 @@
 
 // Reading input file
 $inputData = explode("\n", file_get_contents('inputday1.txt'));
-//$inputData = array("1721", "979", "366", "299", "675", "1456");
+$inputData = array("1721", "979", "366", "299", "675", "1456");
 
+// Part 1
 foreach($inputData as $number) {
 
-    $leftOver = 2020 - (int)$number;
-    $idx = array_search($leftOver, $inputData);
+    $idx = array_search(2020 - (int)$number, $inputData);
 
     if($idx){
-        $total = (int)$inputData[$idx] * (int)$number;
-        print_r("Answer: ". $total . PHP_EOL);
-        exit;
+        print_r("Answer part 1: ". ((int)$inputData[$idx] * (int)$number) . PHP_EOL);
+        break;
     }
 }
 
-print_r("No sum to 2020 found... :(" . PHP_EOL);
+// Part 2
+foreach($inputData as $firstNumber) {
+
+    $leftOver = 2020 - (int)$firstNumber;
+    
+}
+
+
 
 ?>
