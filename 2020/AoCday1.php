@@ -4,7 +4,7 @@
 
 // Reading input file
 $inputData = explode("\n", file_get_contents('inputday1.txt'));
-$inputData = array("1721", "979", "366", "299", "675", "1456");
+//$inputData = array("1721", "979", "366", "299", "675", "1456");
 
 // Part 1
 foreach($inputData as $number) {
@@ -19,9 +19,23 @@ foreach($inputData as $number) {
 
 // Part 2
 foreach($inputData as $firstNumber) {
-
-    $leftOver = 2020 - (int)$firstNumber;
     
+    $leftover = 2020 - (int)$firstNumber;
+    
+    foreach($inputData as $secondNumber) {
+    
+        $leftover2 = $leftover - (int)$secondNumber;
+
+        if($leftover2) {
+
+            $idx = array_search($leftover2, $inputData);
+
+            if($idx){
+                print_r("Answer part 2: " . ((int)$firstNumber * (int)$secondNumber * (int)$inputData[$idx]) . PHP_EOL);
+                exit;
+            }
+        }
+    }
 }
 
 
