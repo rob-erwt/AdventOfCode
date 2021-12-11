@@ -4,7 +4,7 @@
 
 // Reading input file
 $inputData = explode("\n", file_get_contents('inputday11.txt'));
-$map = array();
+$map = $mapPartTwo = array();
 
 // Convert input into single dimensional associative array
 for($h = 0; $h < sizeof($inputData); $h++) {
@@ -13,15 +13,41 @@ for($h = 0; $h < sizeof($inputData); $h++) {
 
     for($w = 0; $w < sizeof($line); $w++) {
         $map[$h . "," . $w] = $line[$w];
+        $mapPartTwo[$h . "," . $w] = $line[$w];
     }
 }
 
+// Part 1
 $nrLoops = 100;
 $nrFlashes = 0;
 
 while($nrLoops) {
 
+    $nrFlashes += calculateNextMap($map);
+    $nrLoops--;
+}
+
+print_r("Nr flashes: " . $nrFlashes . PHP_EOL);
+
+// Part 2
+$nrSteps = 0;
+$partTwo = true;
+
+while($partTwo) {
+    $nrSteps++;
+
+    calculateNextMap($mapPartTwo);
+
+    if(checkForZeroes($mapPartTwo) == 100) { $partTwo = false; }
+}
+
+print_r("Nr steps: " . $nrSteps . PHP_EOL);
+
+function calculateNextMap(&$map) {
+
+    $nrFlashes = 0;
     $flashPositions = array();
+
     foreach($map as $key => $value)
     {
         $map[$key]++;
@@ -61,12 +87,20 @@ while($nrLoops) {
                 if($map[$newKey] == 10) { $flashPositions[] = $newKey; } // Add new flash positions to the list
             }
         }
-        
     }
 
-    $nrLoops--;
+    return $nrFlashes;
 }
 
-print_r("Nr flashes: " . $nrFlashes . PHP_EOL);
+function checkForZeroes($map) {
+
+    $nrZeroes = 0;
+    
+    foreach($map as $key => $value) {
+        if(!$value) { $nrZeroes++; }
+    }
+
+    return $nrZeroes;
+}
 
 ?>
