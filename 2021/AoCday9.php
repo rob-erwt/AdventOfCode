@@ -3,7 +3,7 @@
 /* Code belonging with https://adventofcode.com/2021/day/9 */
 
 // Reading input file
-$inputData = explode("\n", file_get_contents('inputday9test.txt'));
+$inputData = explode("\n", file_get_contents('inputday9.txt'));
 $map = $lowpoints = $lowpointBassins = $bassins = array();
 $sumRiskLevels = 0;
 
@@ -33,10 +33,16 @@ print_r("Sum risk levels: " . $sumRiskLevels . PHP_EOL);
 // Part 2
 foreach($lowpointBassins as $lowpoint)
 {
-    $bassins[] = getBassinPoints($lowpoint, $map, $maxWidth, $maxHeight);
+    $result = getBassinPoints($lowpoint, $map, $maxWidth, $maxHeight);
+    $result = array_unique($result);
+
+    $bassins[] = sizeof($result);
 }
 
-var_dump($bassins);
+rsort($bassins);
+
+print_r("Size:" . ($bassins[0] * $bassins[1] * $bassins[2]) . PHP_EOL);
+
 
 function isLowPoint($position, $posKey, $lineKey, $map, $maxWidth, $maxHeight) {
 
@@ -54,49 +60,53 @@ function isLowPoint($position, $posKey, $lineKey, $map, $maxWidth, $maxHeight) {
 
 function getBassinPoints($point, $map, $maxWidth, $maxHeight) {
 
-    $neighbours = $newNeighbours = $newPoints = array();
+    $neighbours = $returnList = $newPoints = array();
 
-    $bassinPoints[] = $point;
     $curValue = $map[$point[0]][$point[1]];
-    
-    $neighbours = getNeighbours($point[0], $point[1], $maxWidth, $maxHeight);
 
-    if(sizeof($neighbours)) {
-        foreach($neighbours as $neighbourPoint) {
-            if(
-                $map[$neighbourPoint[0]][$neighbourPoint[1]] < 9 &&
-                $map[$neighbourPoint[0]][$neighbourPoint[1]] >= $curValue
-            ) {
-                $newPoints[] = $neighbourPoint;
-                $bassinPoints[] = $neighbourPoint;
-            }
+    $returnList[] = implode(",", $point);
+
+    $neighbours = getNeighbours($point[0], $point[1]);
+
+    foreach($neighbours as $neighbourPoint) {
+        
+        if(
+            ($neighbourPoint[0] < 0 || $neighbourPoint[0] >= $maxHeight) ||
+            ($neighbourPoint[1] < 0 || $neighbourPoint[1] >= $maxWidth)
+        ) {
+            continue;
         }
 
-        if(sizeof($newPoints)) {
-            foreach($newPoints as $newPoint) {
-                $newNeighbours = getBassinPoints($newPoint, $map, $maxWidth, $maxHeight);
-            }
+        if(
+            $map[$neighbourPoint[0]][$neighbourPoint[1]] >= 9 || 
+            $map[$neighbourPoint[0]][$neighbourPoint[1]] < $curValue
+        ) {
+            continue;
+        }
+
+        $newPoints[] = $neighbourPoint;
+    }
+
+    if(sizeof($newPoints)) {
+        foreach($newPoints as $newPoint) {
+            $returnList[] = implode(",", $newPoint);
+            $returnList2 = getBassinPoints($newPoint, $map, $maxWidth, $maxHeight);
+            $returnList = array_merge($returnList, $returnList2);
         }
     }
 
-    return array_merge($bassinPoints, $newNeighbours);
+    return $returnList;
 }
 
-function getNeighbours($posKey, $lineKey, $maxWidth, $maxHeight) {
+function getNeighbours($lineKey, $posKey) {
     
-    if($posKey - 1 >= 0 && $posKey + 1 < $maxWidth && $lineKey - 1 >= 0 && $lineKey + 1 < $maxHeight) {
+    $one = array(($lineKey - 1), $posKey);
+    $two = array(($lineKey + 1), $posKey);
+    $three = array($lineKey, ($posKey - 1));
+    $four = array($lineKey, ($posKey + 1));
+    $neighbours = array($one, $two, $three, $four);
     
-        $neighbours = array(
-                array(($lineKey - 1), $posKey),
-                array(($lineKey + 1), $posKey),
-                array($lineKey, ($posKey - 1)),
-                array($lineKey, ($posKey + 1))
-            );
-        
-        return $neighbours;
-    }
-
-    return array();
+    return $neighbours;
 }
 
 ?>
