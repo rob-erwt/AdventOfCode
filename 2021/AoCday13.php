@@ -1,6 +1,7 @@
 <?php
 
 /* Code belonging with https://adventofcode.com/2021/day/13 */
+error_reporting(E_ERROR | E_PARSE);
 
 // Reading input file
 $inputData = explode("\n\n", file_get_contents('inputday13.txt'));
@@ -26,32 +27,21 @@ function printPaperSheet($map) {
     $maxX = $maxY = 0;
     $mapPoints = array();
 
-    // Get size of the grid
+    // Get size of the grid and filled points
     foreach($map as $point) {
 
         list($x, $y) = explode(",", $point);
 
         $maxX = $x > $maxX ? $x : $maxX;
         $maxY = $y > $maxY ? $y : $maxY;
-    }
 
-    // Prefill grid
-    for($i = 0; $i <= $maxY; $i++) {
-        for($j = 0; $j <= $maxX; $j++) {
-            $mapPoints[$i][$j] = ".";
-        }
-    }
-
-    // Updaste grid with non-transparent points
-    foreach($map as $point) {
-        list($x, $y) = explode(",", $point);
         $mapPoints[$y][$x] = "#";
     }
 
     // Print grid
-    foreach($mapPoints as $row) {
-        foreach($row as $point) {
-            print_r($point);
+    for($i = 0; $i <= $maxY; $i++) {
+        for($j = 0; $j <= $maxX; $j++) {
+            print_r($mapPoints[$i][$j] ?: ".");
         }
         print_r(PHP_EOL);
     }
