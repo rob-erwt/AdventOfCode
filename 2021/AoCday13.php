@@ -15,7 +15,51 @@ foreach($foldList as $fold) {
     $map = array_unique($map);
 }
 
+// Part 1
 print_r("Nr dots: " . sizeof($map) . PHP_EOL);
+
+// Part 2
+printPaperSheet($map);
+
+function printPaperSheet($map) {
+
+    $maxX = $maxY = 0;
+    $mapPoints = array();
+
+    // Get size of the grid
+    foreach($map as $point) {
+
+        list($x, $y) = explode(",", $point);
+
+        $maxX = $x > $maxX ? $x : $maxX;
+        $maxY = $y > $maxY ? $y : $maxY;
+    }
+
+    // Prefill grid
+    for($i = 0; $i <= $maxY; $i++) {
+        for($j = 0; $j <= $maxX; $j++) {
+            $mapPoints[$i][$j] = ".";
+        }
+    }
+
+    // Updaste grid with non-transparent points
+    foreach($map as $point) {
+        list($x, $y) = explode(",", $point);
+        $mapPoints[$y][$x] = "#";
+    }
+
+    // Print grid
+    foreach($mapPoints as $row) {
+        foreach($row as $point) {
+            print_r($point);
+        }
+        print_r(PHP_EOL);
+    }
+
+    print_r(PHP_EOL);
+
+    return true;
+}
 
 function executeFold($map, $axe, $nr) {
 
