@@ -24,8 +24,7 @@ foreach($groups as $group) {
         
         // Get a list wth the yes-anwers for each group member
         foreach($groupMembers as $member) {
-            $member = str_split($member);
-            foreach($member as $answer) {
+            foreach(str_split($member) as $answer) {
                 $allAnswers[$answer]++;
             }
         }
