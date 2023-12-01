@@ -1,37 +1,25 @@
 <?php
 
-/**
- * Spoilers
- * Spoilers
- * Spoilers
- * Spoilers
- * Spoilers
- * Spoilers
- * Spoilers
- * Spoilers
- * Spoilers
- */
-
-$totals = array();
-$idx = 0;
-
-$totals[$idx] = 0;
+$calibrationSum = 0;
 $inputData = explode("\n", file_get_contents('inputday1.txt'));
 
 foreach($inputData as $line) {
-    if($line) {
-        $totals[$idx] += $line;
+
+    $filteredNumbers = array();
+
+    $chars = str_split($line);
+    foreach($chars as $char) {
+        if(is_numeric($char)){
+            $filteredNumbers[] = $char;
+        }
     }
-    else {
-        $idx++;
-        $totals[$idx] = 0;
-    }
+    
+    reset($filteredNumbers);
+    $calibrationSum += current($filteredNumbers).end($filteredNumbers);
 }
 
-rsort($totals);
+echo "PART 1: Sum all calibrations: " . $calibrationSum . PHP_EOL;
 
-echo "PART 1: Most calories: " . $totals[0] . PHP_EOL;
-
-echo "PART 2: Top 3 total: " . array_sum(array_slice($totals, 0, 3)) . PHP_EOL;
+//echo "PART 2: Top 3 total: " . array_sum(array_slice($totals, 0, 3)) . PHP_EOL;
 
 ?>
