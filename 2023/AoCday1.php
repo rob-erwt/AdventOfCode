@@ -39,7 +39,6 @@ foreach($inputData as $line) {
 }
 
 echo "PART 1: Sum all calibrations: " . $calibrationSumPt1 . PHP_EOL;
-
 echo "PART 2: Sum all calibrations: " . $calibrationSumPt2 . PHP_EOL;
 
 ?>
