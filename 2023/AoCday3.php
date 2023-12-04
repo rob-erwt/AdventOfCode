@@ -41,6 +41,11 @@ foreach($engineMatrix as $lineNr => $line) {
             $enginePartNr = '';
             $hasSymbolNeighbour = false;
         }
+
+        if($char == '*') {
+            $neigbouringNumbers = checkNeighboursForNumbers($lineNr, $linePos, $engineMatrix);
+            var_dump($neigbouringNumbers);
+        }
     }
 }
 
@@ -49,43 +54,7 @@ echo "PART 1: Sum of part numbers: " . $sumPartNumbers . PHP_EOL;
 
 function checkNeigboursForSymbol($lineNr, $linePos, $engineMatrix) {
 
-    $minLineNr = $minLinePos = 0;
-    $maxLineNr = sizeof($engineMatrix);
-    $maxLinePos = sizeof($engineMatrix[0]);
-
-    // Get positions around current position
-    $coords = array();
-    if($lineNr) {
-
-        if($linePos) { 
-            $coords['nw'] = $engineMatrix[$lineNr-1][$linePos-1]; 
-        }
-
-        $coords['n'] = $engineMatrix[$lineNr-1][$linePos];
-        
-        if($linePos < $maxLinePos-1) { 
-            $coords['ne'] =  $engineMatrix[$lineNr-1][$linePos+1];
-        }
-    }
-
-    if($linePos) { $coords['w'] = $engineMatrix[$lineNr][$linePos-1]; }
-
-    if($linePos < $maxLinePos-1) { 
-        $coords['e'] =  $engineMatrix[$lineNr][$linePos+1]; 
-    }
-
-    if($lineNr < $maxLineNr - 1) {
-
-        if($linePos) { 
-            $coords['sw'] = $engineMatrix[$lineNr+1][$linePos-1]; 
-        }
-
-        $coords['s'] = $engineMatrix[$lineNr+1][$linePos];
-        
-        if($linePos < $maxLinePos-1) { 
-            $coords['se'] =  $engineMatrix[$lineNr+1][$linePos+1]; 
-        }
-    }
+    $coords = getCoords($lineNr, $linePos, $engineMatrix);
 
     // A symbol is anything not a number or a .
     foreach($coords as $direction => $value) {
@@ -94,6 +63,64 @@ function checkNeigboursForSymbol($lineNr, $linePos, $engineMatrix) {
     }
 
     return false;
+}
+
+function checkNeighboursForNumbers($lineNr, $linePos, $engineMatrix) {
+    $coords = getCoords($lineNr, $linePos, $engineMatrix);
+
+    $neigbouringNumbers = array();
+    var_dump($coords);
+
+    foreach($coords as $direction => $value) {
+        if(is_numeric($value))
+            $neigbouringNumbers[] = $value;
+    }
+
+    return $neigbouringNumbers;
+}
+
+function getCoords($lineNr, $linePos, $engineMatrix) {
+
+    $minLineNr = $minLinePos = 0;
+    $maxLineNr = sizeof($engineMatrix);
+    $maxLinePos = sizeof($engineMatrix[0]);
+
+    // Get positions around current position
+    $coords = array();
+
+    if($lineNr) {
+
+        if($linePos) { 
+            $coords[($lineNr-1) . ',' . ($linePos-1)] = $engineMatrix[$lineNr-1][$linePos-1]; 
+        }
+
+        $coords[($lineNr-1) . ',' . ($linePos)] = $engineMatrix[$lineNr-1][$linePos];
+        
+        if($linePos < $maxLinePos-1) { 
+            $coords[($lineNr-1) . ',' . ($linePos+1)] =  $engineMatrix[$lineNr-1][$linePos+1];
+        }
+    }
+
+    if($linePos) { $coords[($lineNr) . ',' . ($linePos-1)] = $engineMatrix[$lineNr][$linePos-1]; }
+
+    if($linePos < $maxLinePos-1) { 
+        $coords[($lineNr) . ',' . ($linePos+1)] =  $engineMatrix[$lineNr][$linePos+1]; 
+    }
+
+    if($lineNr < $maxLineNr - 1) {
+
+        if($linePos) { 
+            $coords[($lineNr+1) . ',' . ($linePos-1)] = $engineMatrix[$lineNr+1][$linePos-1]; 
+        }
+
+        $coords[($lineNr+1) . ',' . ($linePos)] = $engineMatrix[$lineNr+1][$linePos];
+        
+        if($linePos < $maxLinePos-1) { 
+            $coords[($lineNr+1) . ',' . ($linePos+1)] =  $engineMatrix[$lineNr+1][$linePos+1]; 
+        }
+    }
+
+    return $coords;
 }
 
 ?>
