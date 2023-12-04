@@ -1,6 +1,6 @@
 <?php
 
-$inputData = explode("\n", file_get_contents('inputday4.txt'));
+$inputData = explode("\n", file_get_contents('inputday4test.txt'));
 
 $totalPoints = 0;
 
@@ -11,11 +11,12 @@ foreach($inputData as $line) {
     list($card, $allNumbers) = explode(": ", $line);
     list($winningNumbers, $numbers) = explode(" | ", $allNumbers);
 
-    $winningNumbers = preg_split("/[\s]+/", $winningNumbers);
-    $numbers = preg_split("/[\s]+/", $numbers);
+    $winningNumbers = preg_split("/[\s]+/", $winningNumbers, -1, PREG_SPLIT_NO_EMPTY);
+    $numbers = preg_split("/[\s]+/", $numbers, -1, PREG_SPLIT_NO_EMPTY);
 
     foreach($numbers as $nr) {
         if(in_array($nr, $winningNumbers)) {
+            var_dump($nr, $winningNumbers);
             $cardPoints = ($cardPoints ? $cardPoints * 2 : 1);
         }
     }
