@@ -1,14 +1,17 @@
 <?php
 
-$inputData = explode("\n", file_get_contents('inputday4test.txt'));
+$inputData = explode("\n", file_get_contents('inputday4.txt'));
 
 $totalPoints = 0;
+$totalCards = 0;
+$cardList = array_fill_keys(range(1, sizeof($inputData)), 1);
 
 foreach($inputData as $line) { 
     
-    $cardPoints = 0;
+    $cardPoints = $nrWinningNrs = 0;
 
     list($card, $allNumbers) = explode(": ", $line);
+    $cardId = trim($card, "Card ");
     list($winningNumbers, $numbers) = explode(" | ", $allNumbers);
 
     $winningNumbers = preg_split("/[\s]+/", $winningNumbers, -1, PREG_SPLIT_NO_EMPTY);
@@ -16,15 +19,29 @@ foreach($inputData as $line) {
 
     foreach($numbers as $nr) {
         if(in_array($nr, $winningNumbers)) {
-            var_dump($nr, $winningNumbers);
+
             $cardPoints = ($cardPoints ? $cardPoints * 2 : 1);
+
+            $nrWinningNrs++;
+
+        }
+    }
+
+    if($nrWinningNrs) {
+        for($i = 0; $i < $cardList[$cardId]; $i++) {
+            for($idx = 1; $idx <= $nrWinningNrs; $idx++) {
+                $newCardId = $cardId + $idx;
+                $cardList[$newCardId]++;
+            }
         }
     }
 
     $totalPoints += $cardPoints;
 }
 
+$totalCards = array_sum($cardList);
+
 echo "PART 1: Total points: " . $totalPoints . PHP_EOL;
-//echo "PART 2: Sum of powers possible Game ID's: " . $gameIdPowerSum . PHP_EOL;
+echo "PART 2: Total cards: " . $totalCards . PHP_EOL;
 
 ?>
